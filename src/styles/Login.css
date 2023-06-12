@@ -1,0 +1,25 @@
+.login-links{
+    color: grey;
+    font-size: .9rem;
+}
+.new-user{
+    color: grey;
+    font-size: 1rem;
+}
+.new-user .register{
+    color: rgb(255, 187, 1);
+}
+.avtar input[type=file]::before{
+    content: 'Choose an Avtar                         ';
+    color: #7F6866;
+
+}
+.avtar input[type=file]::-webkit-file-upload-button{
+    visibility: hidden;
+}
+.avtar input[type=file]::file-selector-button {
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    border: none;
+  }

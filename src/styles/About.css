@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;500&display=swap');
+
+.checkout-plan{
+    color: rgb(255, 179, 0);
+}
+
+.details{
+    font-family: 'Karla', sans-serif !important;
+    font-weight: 300;
+}
+.payment-secured{
+    font-family: 'Karla', sans-serif !important;
+    font-weight: 500;
+}
