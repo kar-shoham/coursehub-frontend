@@ -21,7 +21,7 @@ const DrawerBox = styled(Box)({
 })
 const Header = ({ mode, toggleMode }) => {
 
-    let [isAuthenticated, toggleAuth] = useState(false)
+    let [isAuthenticated, toggleAuth] = useState(true)
     let [user, updateUser] = useState({ role: 'admin' })
 
     let [drawer, toggleDrawer] = useState(false)

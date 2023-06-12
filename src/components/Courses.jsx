@@ -64,7 +64,7 @@ const Courses = () => {
   )
 }
 
-const CourseCard = ({poster, title, description, creator, numLectures, views}) => (
+export const CourseCard = ({poster, title, description, creator, numLectures, views}) => (
     <Stack gap={5} sx={{display: 'flex', alignItems: 'center', borderRadius: '5px'}} p={.5}>
         <Box 
         component={'img'} 

@@ -29,7 +29,7 @@ const About = () => {
                     <Stack direction={{xs:'column', sm:'row'}} paddingTop={7} paddingBottom={7} width={'88%'} sx={{display: 'flex', alignItems: 'center'}} gap={2}>
                         <Typography className='details' flex={8}>{details.aboutSite}</Typography>
                         <Box flex={2}>
-                            <Link className='checkout-plan'>Checkout Our Plan</Link>
+                            <Link className='checkout-plan' to={'/subscribe'}>Checkout Our Plan</Link>
                         </Box>
                     </Stack>
                     <Stack width={'88%'} sx={{display: 'flex', alignItems:'center'}} paddingBottom={7}>

@@ -10,7 +10,7 @@
     color: rgb(255, 187, 1);
 }
 .avtar input[type=file]::before{
-    content: 'Choose an Avtar                         ';
+    content: 'Choose an Avtar           ';
     color: #7F6866;
 
 }

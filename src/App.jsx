@@ -11,6 +11,14 @@ import ResetPassword from './components/ResetPassword'
 import Contact from './components/Contact'
 import RequestCourse from './components/RequestCourse'
 import About from './components/About'
+import Subscribe from './components/Subscribe'
+import PaymentSuccess from './components/PaymentSuccess'
+import NotFound from './components/NotFound'
+import PaymentFail from './components/PaymentFail'
+import CoursePage from './components/CoursePage'
+import Profile from './components/Profile'
+import ChangePassword from './components/ChangePassword'
+import UpdateProfile from './components/UpdateProfile'
 
 const App = () => {
   let [mode, toggleMode] = useState('light')
@@ -33,6 +41,14 @@ const App = () => {
         <Route path='/contactus' element={<Contact/>}/>
         <Route path='/request' element={<RequestCourse/>}/>
         <Route path='/about' element={<About/>}/>
+        <Route path='/subscribe' element={<Subscribe/>}/>
+        <Route path='/paymentsuccess' element={<PaymentSuccess/>}/>
+        <Route path='/paymentfailed' element={<PaymentFail/>}/>
+        <Route path='/course/:id' element={<CoursePage/>} />
+        <Route path='/profile' element={<Profile/>}/>
+        <Route path='/changepassword' element={<ChangePassword/>}/>
+        <Route path='/updateprofile' element={<UpdateProfile/>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>
     </ThemeProvider>
