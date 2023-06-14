@@ -1,0 +1,4 @@
+
+.admin-cursor-add *{
+    cursor: url('../assets/admin_cursor.png'), pointer !important;
+}

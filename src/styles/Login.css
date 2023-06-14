@@ -22,4 +22,22 @@
     padding: 0;
     margin: 0;
     border: none;
+}
+
+
+
+.video-input input[type=file]::before{
+    content: 'Choose a Video          ';
+    color: #7F6866;
+}
+.video-input input[type=file]::-webkit-file-upload-button{
+    visibility: hidden;
+}
+.video-input input[type=file]::file-selector-button {
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    border: none;
   }
+
+  

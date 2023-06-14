@@ -52,8 +52,8 @@ const Header = ({ mode, toggleMode }) => {
                                 <Link to={'/register'}><Button onClick={() => toggleDrawer(!drawer)} variant="contained" size='small'>Register</Button></Link>
                             </Stack>)}
 
-                        {user.role === 'admin' ? (<Link to={'/dashboard'}>
-                            <Button variant="outlined" onClick={() => toggleDrawer(!drawer)} size='small' startIcon={<Dashboard />}>Dashboard</Button>
+                        {user.role === 'admin' ? (<Link to={'/admin/createcourse'}>
+                            <Button variant="outlined" onClick={() => toggleDrawer(!drawer)} size='small' startIcon={<Dashboard />}>Admin</Button>
                         </Link>) : (<></>)}
 
                     </Stack>
