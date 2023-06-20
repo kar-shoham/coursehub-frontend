@@ -1,9 +1,24 @@
 import { Stack, Typography, TextField, Box, Button } from '@mui/material'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { Navigate } from 'react-router-dom'
+import { changePassword, getMyProfile } from '../redux/actions/userActions'
 
 
-const ChangePassword = () => {
+const ChangePassword = ({isAuthenticated}) => {
+    let dispatch = useDispatch()
     let [userInfo, updateUserInfo] = useState({'oldPassword': '', 'newPassword': ''})
+    let changePasswordHandler = () => {
+        if(!userInfo.oldPassword || !userInfo.newPassword){
+            return toast.error('Some of the fields are missing')
+        }
+        dispatch(changePassword(userInfo.oldPassword, userInfo.newPassword))
+        updateUserInfo({'oldPassword': '', 'newPassword': ''})
+    }
+    if(!isAuthenticated){
+        return <Navigate to={'/login'}/>
+    }
     return (
         <Box bgcolor={'background.default'} minHeight={'100vh'} color={'text.primary'}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '20vh' }}>
@@ -13,7 +28,7 @@ const ChangePassword = () => {
                         <TextField name='oldPassword' onChange={(e) => updateUserInfo({...userInfo, [e.target.name]:e.target.value})} fullWidth label="Old Password" value={userInfo.oldPassword} variant="outlined" size='small' type='password' />
                         <TextField name='newPassword' onChange={(e) => updateUserInfo({...userInfo, [e.target.name]:e.target.value})} fullWidth label="New Password" value={userInfo.newPassword} variant="outlined" size='small' type='password' />
                         <Box width={'100%'} sx={{display: 'flex', justifyContent: 'center'}}>
-                            <Button variant='contained' size='large'>Change Password</Button>
+                            <Button onClick={changePasswordHandler} variant='contained' size='large'>Change Password</Button>
                         </Box>
                     </Stack>
                 </Stack>

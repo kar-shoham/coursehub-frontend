@@ -1,13 +1,17 @@
 import { Stack, Typography, TextField, Box, Button, Avatar, styled } from '@mui/material'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { Link, Navigate } from 'react-router-dom'
+import { register } from '../redux/actions/userActions'
 
 
 
-const Register = () => {
+const Register = ({isAuthenticated}) => {
     let [userInfo, updateUserInfo] = useState({'name': '', 'email': '', 'password': ''})
     let [image, changeImage] = useState('')
     let [imagePrev, changeImgPrev] = useState('')
+    let dispatch = useDispatch()
     let avtarHandler = (e) => {
         let file = e.target.files[0]
         let reader = new FileReader()
@@ -17,8 +21,19 @@ const Register = () => {
             changeImage(file)
         }
     } 
-    let loginHandler = () => {
-        console.log('Hello World')
+    let registerHandler = () => {
+        if(!userInfo.name || !userInfo.password || !userInfo.email || !image){
+            return toast.error('Some of the fields are missing')
+        }
+        let formData = new FormData()
+        formData.append('name', userInfo.name)
+        formData.append('email', userInfo.email)
+        formData.append('password', userInfo.password)
+        formData.append('file', image)
+        dispatch(register(formData))
+    }
+    if(isAuthenticated){
+        return <Navigate to={'/profile'} replace/>
     }
     return (
         <Box bgcolor={'background.default'} minHeight={'100vh'} color={'text.primary'}>
@@ -33,7 +48,7 @@ const Register = () => {
                         <TextField name='email' onChange={(e) => updateUserInfo({...userInfo, [e.target.name]:e.target.value})} fullWidth label="Email Address" value={userInfo.email} variant="outlined" size='small' type='email' />
                         <TextField name='password' onChange={(e) => updateUserInfo({...userInfo, [e.target.name]:e.target.value})} fullWidth label="Password" value={userInfo.password} variant="outlined" size='small' type='password' />
                         <TextField onChange={avtarHandler} className='avtar' fullWidth  variant="outlined" size='small' type='file'  inputProps={{accept:"image/*"}}/>
-                        <Button onClick={() => loginHandler()} variant='contained' size='small'>Sign Up</Button>
+                        <Button onClick={() => registerHandler()} variant='contained' size='small'>Sign Up</Button>
                         <Typography className='new-user' variant='p'>Already Signed Up? <Link className='register' to={'/login'}>Login</Link> here</Typography>
                     </Stack>
                 </Stack>

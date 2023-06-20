@@ -3,8 +3,10 @@ import { Box, Stack, Typography, TextField, Select, MenuItem, FormControl, Input
 import '../../styles/Dashboard.css'
 import Sidebar from './Sidebar'
 import Poster from '../../assets/default_poster.png'
+import { toast } from 'react-hot-toast'
+import { Navigate } from 'react-router-dom'
 
-const CreateCourse = () => {
+const CreateCourse = ({user, isAuthenticated}) => {
   let categories = [
     'Web Development',
     'Artificial Intelligence',
@@ -33,6 +35,10 @@ const CreateCourse = () => {
   } 
   let inputHandler = (e) => {
     updateCourse({...course, [e.target.name]:e.target.value})
+  }
+  if(!isAuthenticated || user.role !== 'admin'){
+    toast.error('Please login with an admin account to acces this')
+    return <Navigate to={'/profile'}/>
   }
   return (
     <Box minHeight={'100vh'} width={'100%'} bgcolor={'background.default'} color={'text.primary'}>

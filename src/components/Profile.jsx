@@ -1,28 +1,29 @@
 import { Stack, Typography, Box, Button, Avatar, Modal } from '@mui/material'
 import React, { useState } from 'react'
-import MyImg from '../assets/me.jpeg'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import '../styles/Profile.css'
-import tnc from '../assets/tnc.js'
 import { TextField } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { updateProfilePicture } from '../redux/actions/userActions'
 
-const Profile = () => {
-    let [details, updateDetails] = useState({
-        'name': 'Shoham Kar',
-        'email': 'kar.shoham@gmail.com',
-        'createdAt': '25-03-2023',
-        'tnc': tnc
-    })
+const Profile = ({isAuthenticated, user}) => {
+    
+    if(!isAuthenticated){
+        return <Navigate to={'/login'} replace/>
+    }
+    let [createdAt, updateCreatedAt] = useState('25-03-2023')
     let [open, changeOpen] = useState(false)
     let [image, changeImage] = useState('')
-    let [imagePrev, changeImgPrev] = useState(MyImg)
+    let [imagePrev, changeImgPrev] = useState(user.avatar.url)
     let [tempImgPrev, changeTempImgPrev] = useState('')
+
     return (
         <Box bgcolor={'background.default'} minHeight={'100vh'} color={'text.primary'}>
             <ChangeAvtarModal
                 open={open}
+                image={image}
                 changeImage={changeImage}
                 changeOpen={changeOpen}
                 changeImgPrev={changeImgPrev}
@@ -40,15 +41,15 @@ const Profile = () => {
                         <Stack width={{ xs: '100%', sm: '66%' }} gap={2}>
                             <Stack direction={'row'} gap={2}>
                                 <Typography fontWeight={600}>Name </Typography>
-                                <Typography>{details.name}</Typography>
+                                <Typography>{user.name}</Typography>
                             </Stack>
                             <Stack direction={'row'} gap={2}>
                                 <Typography fontWeight={600}>Email </Typography>
-                                <Typography>{details.email}</Typography>
+                                <Typography>{user.email}</Typography>
                             </Stack>
                             <Stack direction={'row'} gap={2}>
                                 <Typography fontWeight={600}>Created At </Typography>
-                                <Typography>{details.createdAt}</Typography>
+                                <Typography>{createdAt}</Typography>
                             </Stack>
                             <Stack direction={'row'} gap={2} sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography fontWeight={600}>Subscription </Typography>
@@ -88,7 +89,7 @@ const Profile = () => {
 }
 
 
-const ChangeAvtarModal = ({ open, changeOpen, changeImage, changeImgPrev, tempImgPrev, changeTempImgPrev }) => {
+const ChangeAvtarModal = ({ image, open, changeOpen, changeImage, changeImgPrev, tempImgPrev, changeTempImgPrev }) => {
     const modalStyle = {
         position: 'absolute',
         top: '25%',
@@ -99,6 +100,7 @@ const ChangeAvtarModal = ({ open, changeOpen, changeImage, changeImgPrev, tempIm
         boxShadow: 24,
         p: 4,
     };
+    let dispatch = useDispatch()
     let avtarHandler = (e) => {
         let file = e.target.files[0]
         let reader = new FileReader()
@@ -108,10 +110,13 @@ const ChangeAvtarModal = ({ open, changeOpen, changeImage, changeImgPrev, tempIm
             changeImage(file)
         }
     } 
-    let changeAvtar = () => {
+    let changeAvtar = async() => {
         changeImgPrev(tempImgPrev)
         changeTempImgPrev('')
         changeOpen(!open)
+        let formData = new FormData()
+        formData.append('file', image)
+        dispatch(updateProfilePicture(formData))
     }
     return (
         <Modal open={open} onClose={() => changeOpen(!open)} >

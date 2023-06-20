@@ -4,7 +4,7 @@ import '../../styles/Dashboard.css'
 import Sidebar from './Sidebar'
 
 
-const Dashboard = () => {
+const Dashboard = ({user, isAuthenticated}) => {
   return (
     <Box minHeight={'100vh'} width={'100%'} bgcolor={'background.default'} color={'text.primary'}>
         <Stack paddingTop={5} direction={'row'} className='admin-cursor-add'>

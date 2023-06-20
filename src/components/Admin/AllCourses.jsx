@@ -4,8 +4,10 @@ import Sidebar from './Sidebar'
 import { Delete } from '@mui/icons-material'
 import Poster from '../../assets/default_poster.png'
 import Course from './Course'
+import { toast } from 'react-hot-toast'
+import { Navigate } from 'react-router-dom'
 
-const AllCourses = () => {
+const AllCourses = ({user, isAuthenticated}) => {
   let [courses, updateCourses] = useState([{
     id: '647a215858b029e6a20273ba',
     poster: Poster,
@@ -18,6 +20,10 @@ const AllCourses = () => {
   let [open, toggleOpen] = useState(false)
   let handleClick = () => {
     toggleOpen(!open)
+  }
+  if(!isAuthenticated || user.role !== 'admin'){
+    toast.error('Please login with an admin account to acces this')
+    return <Navigate to={'/profile'}/>
   }
   return (
     <Box minHeight={'100vh'} width={'100%'} bgcolor={'background.default'} color={'text.primary'}>
