@@ -10,7 +10,7 @@ const Loading = () => {
         justifyContent: 'center',
         width: '100vw',
         height: '100vh'
-    }}>
+    }} bgcolor={'background.default'} color={'text.primary'}>
         <div className="three-body">
             <div className="three-body__dot"></div>
             <div className="three-body__dot"></div>

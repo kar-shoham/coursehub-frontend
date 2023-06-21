@@ -1,24 +1,54 @@
 import { Stack, Typography, Box, Button, Avatar, Modal } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import '../styles/Profile.css'
 import { TextField } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
-import { useDispatch } from 'react-redux'
-import { updateProfilePicture } from '../redux/actions/userActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyProfile, getPlaylist, updateProfilePicture } from '../redux/actions/userActions'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+import { server } from '../redux/store'
+import { removeLecture, setLoadingFalse, setLoadingTrue } from '../redux/reducers/userReducer'
 
 const Profile = ({isAuthenticated, user}) => {
     
     if(!isAuthenticated){
         return <Navigate to={'/login'} replace/>
     }
+    let {playlist} = useSelector(state => state.user)
     let [createdAt, updateCreatedAt] = useState('25-03-2023')
     let [open, changeOpen] = useState(false)
     let [image, changeImage] = useState('')
     let [imagePrev, changeImgPrev] = useState(user.avatar.url)
     let [tempImgPrev, changeTempImgPrev] = useState('')
-
+    let dispatch = useDispatch()
+    let cancelSubscription = async() => {
+        try{
+            dispatch(setLoadingTrue())
+            await axios.delete(`${server}/cancelsubscription`, {withCredentials: true})
+            toast.success('Subscription cancelled')
+            dispatch(getMyProfile())
+            dispatch(setLoadingFalse())
+        } catch(err){
+            toast.error(err.response.data.message)
+            dispatch(setLoadingFalse())
+        }
+    }
+    let removeFromPlaylistHandler = async(id) => {
+        try {
+            await axios.post(`${server}/removefromplaylist`, {id},{withCredentials: true})
+            dispatch(removeLecture({id}))
+            toast.success('Course removed from playlist')
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+    let lectureIds = user?.playlist.map(ele => ele.course)
+    useEffect(() => {
+        dispatch(getPlaylist(lectureIds))
+    }, [])
     return (
         <Box bgcolor={'background.default'} minHeight={'100vh'} color={'text.primary'}>
             <ChangeAvtarModal
@@ -53,7 +83,11 @@ const Profile = ({isAuthenticated, user}) => {
                             </Stack>
                             <Stack direction={'row'} gap={2} sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography fontWeight={600}>Subscription </Typography>
-                                <Link className='checkout-plan'>Cancel Subscription</Link>
+                                {user.subscription?.status === 'active' ? (
+                                <Button className='checkout-plan' onClick={cancelSubscription}>Cancel Subscription</Button>
+                                ) : (
+                                <Link className='checkout-plan' to={'/subscribe'}>Buy Subscription</Link>
+                                )}
                             </Stack>
                             <Stack direction={{ xs: 'column', sm: 'row' }} gap={2}>
                                 <Link to={'/updateprofile'}>
@@ -68,14 +102,15 @@ const Profile = ({isAuthenticated, user}) => {
                     <Stack paddingTop={7} paddingBottom={7} width={'88%'} sx={{ display: 'flex', alignItems: 'center' }} gap={2}>
                         <Typography className='details' flex={8} fontWeight={700} fontSize={'1.5rem'}>Playlists</Typography>
                         <Stack direction={{ xs: 'column', sm: 'row' }} gap={2}>
-                            <PlaylistCourseCard
-                                title="Web Dev"
-                                poster={'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'}
-                            />
-                            <PlaylistCourseCard
-                                title="Web Dev"
-                                poster={'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'}
-                            />
+                            {playlist.map(ele => 
+                                <PlaylistCourseCard
+                                    id={ele._id}
+                                    title={ele.title}
+                                    poster={ele.poster.url}
+                                    key={ele._id}
+                                    removeFromPlaylistHandler={removeFromPlaylistHandler}
+                                />
+                            )}
                             <PlaylistCourseCard
                                 title="Web Dev"
                                 poster={'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'}
@@ -137,7 +172,7 @@ const ChangeAvtarModal = ({ image, open, changeOpen, changeImage, changeImgPrev,
     )
 }
 
-const PlaylistCourseCard = ({ poster, title }) => (
+const PlaylistCourseCard = ({ poster, title, id, removeFromPlaylistHandler }) => (
     <Stack gap={5} sx={{ display: 'flex', alignItems: 'center', borderRadius: '5px' }} p={.5}>
         <Box
             component={'img'}
@@ -148,7 +183,7 @@ const PlaylistCourseCard = ({ poster, title }) => (
             <Typography variant='p' fontWeight={600}>{title}</Typography>
             <Stack direction={'row'} gap={1}>
                 <Link><Button variant='contained' color='secondary' size='small'>Watch Now</Button></Link>
-                <Link><Button variant='outlined' color='success' size='small'>Remove</Button></Link>
+                <Button variant='outlined' color='success' size='small' onClick={() => removeFromPlaylistHandler(id)}>Remove</Button>
             </Stack>
         </Stack>
     </Stack>

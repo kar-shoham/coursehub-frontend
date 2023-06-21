@@ -69,7 +69,7 @@ const App = () => {
             <Route path='/contactus' element={<Contact/>}/>
             <Route path='/request' element={<RequestCourse/>}/>
             <Route path='/about' element={<About/>}/>
-            <Route path='/subscribe' element={<Subscribe/>}/>
+            <Route path='/subscribe' element={<Subscribe isAuthenticated={isAuthenticated} user={user}/>}/>
             <Route path='/paymentsuccess' element={<PaymentSuccess/>}/>
             <Route path='/paymentfailed' element={<PaymentFail/>}/>
             <Route path='/course/:id' element={<CoursePage/>} />

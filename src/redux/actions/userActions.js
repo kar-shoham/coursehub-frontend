@@ -1,5 +1,6 @@
 import { server } from "../store.js";
 import {
+  addLecture,
   loadUserFailed,
   loadUserRequest,
   loadUserSuccess,
@@ -48,7 +49,7 @@ export let getMyProfile = () => async (dispatch) => {
   try {
     dispatch(loadUserRequest());
     let { data } = await axios.get(`${server}/me`, { withCredentials: true });
-    data.message = `Welcome back ${data.user.name}`;
+    // data.message = `Welcome back ${data.user.name}`;
     dispatch(loadUserSuccess(data));
   } catch (error) {
     error.response.data.message = "Please login";
@@ -162,4 +163,53 @@ export let resetPass = (token, newPassword) => async(dispatch) => {
         dispatch(showError(err.response.data))
         dispatch(setLoadingFalse())
     }
+}
+
+export let requestACourse = (name, email, details) => async(dispatch) => {
+  try {
+    dispatch(setLoadingTrue())
+    await axios.post(`${server}/requestcourse`, {
+      name,
+      email,
+      details
+    },{
+      withCredentials: true
+    })
+    dispatch(setLoadingFalse())
+    dispatch(showMessage({message: 'Course Request Sent'}))
+  } catch (error) {
+    dispatch(setLoadingFalse())
+    dispatch(showError(error.response.data))
+  }
+}
+
+export let contactUs = (name, email, message) => async(dispatch) => {
+  try {
+    dispatch(setLoadingTrue())
+    await axios.post(`${server}/contactus`, {
+      name,
+      email,
+      message
+    },{
+      withCredentials: true
+    })
+    dispatch(setLoadingFalse())
+    dispatch(showMessage({message: 'Message Sent'}))
+  } catch (error) {
+    dispatch(setLoadingFalse())
+    dispatch(showError({message: 'Some error occured'}))
+  }
+}
+
+export let getPlaylist = (lectureIds) => async(dispatch) => {
+  try {
+    let {data} = await axios.get(`${server}/courses`, {withCredentials: true})
+    let toAdd = []
+    data.courses.forEach(ele => {
+      if(lectureIds.includes(ele._id)) toAdd.push(ele)
+    })
+    dispatch(addLecture(toAdd))
+  } catch (error) {
+    dispatch(showError(error.response.data))
+  }
 }

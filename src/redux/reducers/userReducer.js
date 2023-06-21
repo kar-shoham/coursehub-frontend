@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 let userSlice = createSlice({
   name: "user",
-  initialState: {loading: false},
+  initialState: {loading: false, playlist:[]},
   reducers: {
     loginRequest(state) {
       state.loading = true;
@@ -85,6 +85,12 @@ let userSlice = createSlice({
     },
     setLoadingFalse(state){
       state.loading = false
+    },
+    addLecture(state, action){
+      state.playlist = action.payload
+    },
+    removeLecture(state, action){
+      state.playlist = state.playlist.filter(ele => ele._id !== action.payload.id)
     }
   },
 });
@@ -110,5 +116,7 @@ export let {
   showMessage,
   updateProfile,
   setLoadingFalse,
-  setLoadingTrue
+  setLoadingTrue,
+  addLecture,
+  removeLecture
 } = userSlice.actions;

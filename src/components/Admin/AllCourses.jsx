@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Stack, Typography, TableContainer, TableHead, TableRow, TableCell, Table, TableBody, Paper, Button, IconButton } from '@mui/material'
 import Sidebar from './Sidebar'
 import { Delete } from '@mui/icons-material'
@@ -6,25 +6,28 @@ import Poster from '../../assets/default_poster.png'
 import Course from './Course'
 import { toast } from 'react-hot-toast'
 import { Navigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteCourse, getAllCourses } from '../../redux/actions/courseActions'
 
 const AllCourses = ({user, isAuthenticated}) => {
-  let [courses, updateCourses] = useState([{
-    id: '647a215858b029e6a20273ba',
-    poster: Poster,
-    title: 'React Course',
-    category: 'Web Development',
-    creator: 'FreeCodeCamp',
-    views: 1234,
-    lectures: 15
-  }]) 
+  let {courses} = useSelector(state => state.course)
   let [open, toggleOpen] = useState(false)
-  let handleClick = () => {
+  let [courseId, changeCourseId] = useState('')
+  let dispatch = useDispatch()
+  let handleClick = (id) => {
+    changeCourseId(id)
     toggleOpen(!open)
   }
   if(!isAuthenticated || user.role !== 'admin'){
     toast.error('Please login with an admin account to acces this')
     return <Navigate to={'/profile'}/>
   }
+  let deleteCourseHandler = (id) => {
+    dispatch(deleteCourse(id))
+  }
+  useEffect(() => {
+    dispatch(getAllCourses())
+  }, [dispatch])
   return (
     <Box minHeight={'100vh'} width={'100%'} bgcolor={'background.default'} color={'text.primary'}>
       <Stack paddingTop={5} direction={'row'} className='admin-cursor-add'>
@@ -48,23 +51,29 @@ const AllCourses = ({user, isAuthenticated}) => {
                 <TableBody>
                   {courses.map((row) => (
                     <TableRow
-                      key={row.id}
+                      key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">{row.id}</TableCell>
+                      <TableCell component="th" scope="row">{row._id}</TableCell>
                       <TableCell align="left">
                         <Box sx={{width:'70px', height:'45px'}}>
-                          <img src={row.poster} style={{width:'100%', height:'100%'}}/>
+                          <img src={row.poster.url} style={{width:'100%', height:'100%'}}/>
                         </Box>
                       </TableCell>
                       <TableCell align="right">{row.title}</TableCell>
                       <TableCell align="right">{row.category}</TableCell>
-                      <TableCell align="right">{row.creator}</TableCell>
+                      <TableCell align="right">{row.createdBy}</TableCell>
                       <TableCell align="right">{row.views}</TableCell>
-                      <TableCell align="right">{row.lectures}</TableCell>
+                      <TableCell align="right">{row.numOfVideos}</TableCell>
                       <TableCell align="right">
-                        <Button onClick={handleClick} size='small' variant='outlined' color='secondary'>View Lectures</Button>
-                        <IconButton color='secondary'>
+                        <Button 
+                        onClick={() => handleClick(row._id)} 
+                        size='small' 
+                        variant='outlined' 
+                        color='secondary'>
+                          View Lectures
+                        </Button>
+                        <IconButton color='secondary' onClick={() => deleteCourseHandler(row._id)}>
                         <Delete />
                       </IconButton>
                       </TableCell>
@@ -78,7 +87,7 @@ const AllCourses = ({user, isAuthenticated}) => {
         </Box>
         <Sidebar />
       </Stack>
-      <Course open={open} toggleOpen={toggleOpen}/>
+      <Course open={open} toggleOpen={toggleOpen} id={courseId}/>
     </Box>
   )
 }

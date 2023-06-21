@@ -15,15 +15,6 @@ const Users = ({user, isAuthenticated}) => {
     toast.error('Please login with an admin account to acces this')
     return <Navigate to={'/profile'}/>
   }
-  let getUsers = async() => {
-    try{
-      let {data} = await axios.get(`${server}/admin/users`, {withCredentials: true})
-      updateUsers(data.users)
-    }
-    catch(err){
-      toast.error('Some error occured')
-    }
-  }
   let makeAdminHandler = async(id) => {
     try {
       await axios.patch(`${server}/makeadmin/${id}`, {}, {withCredentials: true})
@@ -39,15 +30,24 @@ const Users = ({user, isAuthenticated}) => {
   }
   let deleteUserHandler = async(id) => {
     try {
-      await axios.delete(`${server}/admin/deleteuser/${id}`, {}, {withCredentials: true})
+      let {data} = await axios.delete(`${server}/admin/deleteuser/${id}`, {withCredentials: true})
       let updatedUsers = users.filter(ele => ele._id !== id)
       updateUsers(updatedUsers)
-      toast.success('User deleted successfully')
+      toast.success(data.message)
     } catch (error) {
       // console.log(error.response.data)
       toast.error('Some error occured')
     }
   } 
+  let getUsers = async() => {
+    try{
+      let {data} = await axios.get(`${server}/admin/users`, {withCredentials: true})
+      updateUsers(data.users)
+    }
+    catch(err){
+      toast.error('Some error occured')
+    }
+  }
   useEffect(() => {
     getUsers()
   }, [])
@@ -79,7 +79,7 @@ const Users = ({user, isAuthenticated}) => {
                       <TableCell align="right">{row.name}</TableCell>
                       <TableCell align="right">{row.email}</TableCell>
                       <TableCell align="right">{row.role}</TableCell>
-                      <TableCell align="right">{row.subscription}</TableCell>
+                      <TableCell align="right">{row.subscription ? 'Active': 'None'}</TableCell>
                       <TableCell align="right">
                         <Button disabled={row.role === 'admin'} onClick={() => makeAdminHandler(row._id)} size='small' variant='outlined' color='secondary'>Make Admin</Button>
                         <IconButton disabled={row.role === 'admin'} onClick={() => deleteUserHandler(row._id)} color='secondary'>

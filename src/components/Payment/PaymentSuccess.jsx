@@ -1,11 +1,13 @@
 import { CheckCircle } from '@mui/icons-material'
 import { Stack, Typography, TextField, Box, Button } from '@mui/material'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 
 const PaymentSuccess = () => {
-    let [refId, changeRefId] = useState('dsfdzdfsakjh12.fdsa')
+
+    const [searchParams] = useSearchParams();
+    let [refId, updateRefId] = useState(searchParams.get('reference'))
     return (
         <Box bgcolor={'background.default'} minHeight={'100vh'} color={'text.primary'}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '15vh' }}>
