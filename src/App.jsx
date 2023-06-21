@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { clearError, clearMessage } from './redux/reducers/userReducer'
 import { getMyProfile } from './redux/actions/userActions'
 import Loading from './components/Loading'
+import CourseNotFound from './components/CourseNotFound'
 
 const App = () => {
   let [mode, toggleMode] = useState('light')
@@ -72,7 +73,7 @@ const App = () => {
             <Route path='/subscribe' element={<Subscribe isAuthenticated={isAuthenticated} user={user}/>}/>
             <Route path='/paymentsuccess' element={<PaymentSuccess/>}/>
             <Route path='/paymentfailed' element={<PaymentFail/>}/>
-            <Route path='/course/:id' element={<CoursePage/>} />
+            <Route path='/course/:id' element={<CoursePage user={user} isAuthenticated={isAuthenticated}/>} />
             <Route path='/profile' element={<Profile isAuthenticated={isAuthenticated} user={user}/>}/>
             <Route path='/changepassword' element={<ChangePassword isAuthenticated={isAuthenticated} />}/>
             <Route path='/updateprofile' element={<UpdateProfile isAuthenticated={isAuthenticated}/>}/>
@@ -81,7 +82,8 @@ const App = () => {
             <Route path='/admin/createcourse' element={<CreateCourse user={user} isAuthenticated={isAuthenticated}/>}/>
             <Route path='/admin/courses' element={<AllCourses user={user} isAuthenticated={isAuthenticated}/>}/>
             <Route path='/admin/users' element={<Users user={user} isAuthenticated={isAuthenticated}/>} />
-    
+
+            <Route path='/coursenotfound' element={<CourseNotFound/>}/>
             <Route path='*' element={<NotFound/>}/>
           </Routes>
           <Toaster/>

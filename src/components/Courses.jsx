@@ -81,20 +81,20 @@ const Courses = () => {
 }
 
 export const CourseCard = ({ id, poster, title, description, creator, numLectures, views, addToPlaylistHandler }) => (
-    <Stack gap={5} sx={{ display: 'flex', alignItems: 'center', borderRadius: '5px' }} p={.5}>
+    <Stack gap={5} sx={{ display: 'flex', alignItems: 'center', borderRadius: '5px' }} p={.5} width={'250px'}>
         <Box
             component={'img'}
             src={poster}
-            sx={{ width: '160px', height:'88px' }}
+            sx={{ width: '90%', height:'120px' }}
         />
-        <Stack gap={1}>
+        <Stack gap={1} paddingLeft={2}>
             <Typography variant='p' fontWeight={600}>{title}</Typography>
-            <Typography variant='p' >{description}</Typography>
+            <Typography variant='p' height={'50px'}>{description.length > 50 ? `${description.slice(0,50)}...`: description}</Typography>
             <Typography variant='p' ><Typography variant='p' fontWeight={600}>CREATOR: </Typography>{creator}</Typography>
             <Typography variant='p' fontWeight={600}>LECTURES - {numLectures}</Typography>
             <Typography variant='p' fontWeight={600}>VIEWS - {views}</Typography>
             <Stack direction={'row'}>
-                <Link><Button variant='contained' color='secondary' size='small'>Watch Now</Button></Link>
+                <Link to={`/course/${id}`}><Button variant='contained' color='secondary' size='small'>Watch Now</Button></Link>
                 <Button onClick={() => addToPlaylistHandler(id)} variant='outlined' color='success' size='small'>Add to playlist</Button>
             </Stack>
         </Stack>

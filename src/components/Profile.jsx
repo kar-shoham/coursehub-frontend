@@ -111,10 +111,6 @@ const Profile = ({isAuthenticated, user}) => {
                                     removeFromPlaylistHandler={removeFromPlaylistHandler}
                                 />
                             )}
-                            <PlaylistCourseCard
-                                title="Web Dev"
-                                poster={'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'}
-                            />
                         </Stack>
                     </Stack>
                 </Stack>
@@ -177,12 +173,12 @@ const PlaylistCourseCard = ({ poster, title, id, removeFromPlaylistHandler }) =>
         <Box
             component={'img'}
             src={poster}
-            sx={{ width: '12rem' }}
+            sx={{ width: '180px', height: '111px' }}
         />
         <Stack gap={1}>
             <Typography variant='p' fontWeight={600}>{title}</Typography>
             <Stack direction={'row'} gap={1}>
-                <Link><Button variant='contained' color='secondary' size='small'>Watch Now</Button></Link>
+                <Link to={`/course/${id}`}><Button variant='contained' color='secondary' size='small'>Watch Now</Button></Link>
                 <Button variant='outlined' color='success' size='small' onClick={() => removeFromPlaylistHandler(id)}>Remove</Button>
             </Stack>
         </Stack>
