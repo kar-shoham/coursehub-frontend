@@ -35,7 +35,7 @@ const CoursePage = ({user, isAuthenticated}) => {
         }
         else if(user.role !== 'admin' && user.subscription?.status !== 'active'){
             toast.error('Please buy the pro back to access the resource')
-            navigate('/subscribe')
+            navigate('/subscribe', {replace : true})
         }
         else getLecture()
     }, [])
